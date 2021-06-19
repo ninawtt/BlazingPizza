@@ -1,0 +1,89 @@
+﻿@page "/myorders/{orderId:int}"
+@using System.Threading
+@inject HttpClient HttpClient
+@implements IDisposable
+
+<div class="main">
+    @if (invalidOrder)
+    {
+        <h2>Nope</h2>
+        <p>Sorry, this order could not be loaded.</p>
+    }
+    else if (orderWithStatus == null)
+    {
+        <text>Loading...</text>
+    }
+    else
+    {
+        <div class="track-order">
+            <div class="track-order-title">
+                <h2>
+                    Order placed @orderWithStatus.Order.CreatedTime.ToLongDateString()
+                </h2>
+                <p class="ml-auto mb-0">
+                    Status: <strong>@orderWithStatus.StatusText</strong>
+                </p>
+            </div>
+            <div class="track-order-body">
+                <div class="track-order-details">
+                    <OrderReview Order="orderWithStatus.Order"></OrderReview>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+
+    OrderWithStatus orderWithStatus;
+    bool invalidOrder;
+    CancellationTokenSource pollingCancallationToken;
+
+    // OnParameterSet() fires when the component is first instantiated and any time its parameters change value
+    protected override void OnParametersSet()
+    {
+        // If we were already polling for a different order, stop doing so
+        pollingCancallationToken?.Cancel();
+
+        // Start a new poll loop
+        PollForUpdates();
+    }
+
+    private async void PollForUpdates()
+    {
+        pollingCancallationToken = new CancellationTokenSource();
+        while (!pollingCancallationToken.IsCancellationRequested)
+        {
+            try
+            {
+                invalidOrder = false;
+                orderWithStatus = await HttpClient.GetFromJsonAsync<OrderWithStatus>($"orders/{OrderId}");
+                StateHasChanged();
+
+                if (orderWithStatus.IsDelivered)
+                {
+                    pollingCancallationToken.Cancel();
+                }
+                else
+                {
+                    await Task.Delay(4000); // TODO: why we need this?
+                }
+            }
+            catch (Exception ex)
+            {
+                invalidOrder = true;
+                pollingCancallationToken.Cancel();
+                Console.Error.WriteLine(ex);
+                StateHasChanged();
+            }
+        }
+    }
+
+    // The framework calls Dispose automatically when any given component instance is torn down and removed from the UI.
+    void IDisposable.Dispose()
+    {
+        pollingCancallationToken?.Cancel();
+    }
+}
