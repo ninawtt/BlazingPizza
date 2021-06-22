@@ -26,7 +26,8 @@
             </div>
             <div class="track-order-body">
                 <div class="track-order-details">
-                    <OrderReview Order="orderWithStatus.Order"></OrderReview>
+                    <OrderTrackingBar StatusText="@orderWithStatus.StatusText" />
+                    <OrderReview Order="orderWithStatus.Order" />
                 </div>
             </div>
         </div>

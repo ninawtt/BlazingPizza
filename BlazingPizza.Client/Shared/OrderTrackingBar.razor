@@ -1,0 +1,64 @@
+﻿<!-- Reference from https://bbbootstrap.com/snippets/order-tracking-progressbar-icons-22484204 -->
+<div class="order-tracking-bar">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12">
+            <ul id="progressbar" class="text-center">
+                <li class="@bakingStatus step0"></li>
+                <li class="@packingStatus step0"></li>
+                <li class="@deliveredStatus step0"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row justify-content-between order-status-icons-container">
+        <div class="row d-flex order-status-icon-content">
+            <img class="order-status-icon" src="img/baking.png">
+            <div class="d-flex flex-column">
+                <p class="font-weight-bold">Preparing</p>
+                <small>Icons made by <a href="" title="monkik">monkik</a> <br />from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></small>
+            </div>
+        </div>
+        <div class="row d-flex order-status-icon-content">
+            <img class="order-status-icon" src="img/packing.png">
+            <div class="d-flex flex-column">
+                <p class="font-weight-bold">Out for Delivery</p>
+                <small>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> <br />from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></small>
+            </div>
+        </div>
+        <div class="row d-flex order-status-icon-content">
+            <img class="order-status-icon" src="img/pizza-deliver.png">
+            <div class="d-flex flex-column">
+                <p class="font-weight-bold">Delivered</p>
+                <small>Icons made by <a href="" title="Vitaly Gorbachev">Vitaly Gorbachev</a> <br />from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string StatusText { get; set; }
+
+    string bakingStatus = "";
+    string packingStatus = "";
+    string deliveredStatus = "";
+    string activeStatus = "active";
+
+    protected override void OnParametersSet()
+    {
+        switch (StatusText)
+        {
+            case "Preparing":
+                bakingStatus = activeStatus;
+                break;
+            case "Out for delivery":
+                bakingStatus = activeStatus;
+                packingStatus = activeStatus;
+                break;
+            case "Delivered":
+                bakingStatus = activeStatus;
+                packingStatus = activeStatus;
+                deliveredStatus = activeStatus;
+                break;
+        }
+    }
+}
