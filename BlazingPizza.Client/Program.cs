@@ -14,7 +14,9 @@ namespace BlazingPizza.Client
             builder.RootComponents.Add<App>("#app");
 
             // An HttpClient is registered as a scoped service, not singleton.
+            // Singleton usually means for all users, where as scoped means for the current unit-of-work.
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<OrderState>();
 
             await builder.Build().RunAsync();
         }
