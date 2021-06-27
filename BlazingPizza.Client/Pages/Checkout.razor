@@ -1,9 +1,15 @@
 ﻿@page "/checkout"
-@inject HttpClient HttpClient
+@inject OrdersClient OrdersClient
 @inject NavigationManager NavigationManager
 @inject OrderState OrderState
+@attribute [Authorize]
 
 <div class="main">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@errorMessage</div>
+    }
+
     <EditForm Model="OrderState.Order.DeliveryAddress" OnValidSubmit="PlaceOrder">
         <div class="checkout-cols">
             <div class="checkout-order-details">
@@ -26,14 +32,27 @@
 
 @code {
     bool isSubmitting;
+    private string errorMessage;
 
     async Task PlaceOrder()
     {
         isSubmitting = true;
-        var response = await HttpClient.PostAsJsonAsync("orders", OrderState.Order);
-        var newOrderId = await response.Content.ReadFromJsonAsync<int>();
-        OrderState.ResetOrder();
-        isSubmitting = false;
-        NavigationManager.NavigateTo($"myorders/{newOrderId}");
+
+        try
+        {
+            var newOrderId = await OrdersClient.PlaceOrder(OrderState.Order);
+
+            OrderState.ResetOrder();
+            isSubmitting = false;
+            NavigationManager.NavigateTo($"myorders/{newOrderId}");
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
     }
 }
