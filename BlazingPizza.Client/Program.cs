@@ -23,7 +23,7 @@ namespace BlazingPizza.Client
             builder.Services.AddScoped<OrderState>();
 
             // Add auth services
-            builder.Services.AddApiAuthorization();
+            builder.Services.AddApiAuthorization< PizzaAuthenticationState>();
 
 
             await builder.Build().RunAsync();
