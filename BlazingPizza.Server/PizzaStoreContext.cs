@@ -23,14 +23,14 @@ namespace BlazingPizza.Server
 
         public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder) // Fluent API
         {
             base.OnModelCreating(modelBuilder);
 
             // Configuring a many-to-many special -> topping relationship that is friendly for serialization
-            modelBuilder.Entity<PizzaTopping>().HasKey(pst => new { pst.PizzaId, pst.ToppingId });
+            modelBuilder.Entity<PizzaTopping>().HasKey(pst => new { pst.PizzaId, pst.ToppingId }); // composite key
             modelBuilder.Entity<PizzaTopping>().HasOne<Pizza>().WithMany(ps => ps.Toppings);
-            modelBuilder.Entity<PizzaTopping>().HasOne(pst => pst.Topping).WithMany();
+            modelBuilder.Entity<PizzaTopping>().HasOne(pst => pst.Topping).WithMany(); // single navigation property
 
             // Inline the Lat-Long pairs in Order rather than having a FK to another table
             modelBuilder.Entity<Order>().OwnsOne(o => o.DeliveryLocation);

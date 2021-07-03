@@ -4,10 +4,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace BlazingPizza.Server
 {
-    public class Program
+    public class Program // Server side entry point
     {
         public static void Main(string[] args)
         {
+            // set up host-level services
             var host = CreateHostBuilder(args).Build();
 
             // Initialize the database

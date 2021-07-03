@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlazingPizza.Client
 {
-    public class Program
+    public class Program // Client side entry point
     {
         public static async Task Main(string[] args)
         {

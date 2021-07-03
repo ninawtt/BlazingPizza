@@ -25,7 +25,7 @@ namespace BlazingPizza.Server
         public async Task<ActionResult<List<OrderWithStatus>>> GetOrders()
         {
             var orders = await _db.Orders
-                 .Where(o => o.UserId == GetUserId())
+                .Where(o => o.UserId == GetUserId())
                 .Include(o => o.DeliveryLocation)
                 .Include(o => o.Pizzas).ThenInclude(p => p.Special)
                 .Include(o => o.Pizzas).ThenInclude(p => p.Toppings).ThenInclude(t => t.Topping)
@@ -40,7 +40,7 @@ namespace BlazingPizza.Server
         {
             var order = await _db.Orders
                 .Where(o => o.OrderId == orderId)
-                 .Where(o => o.UserId == GetUserId())
+                .Where(o => o.UserId == GetUserId())
                 .Include(o => o.DeliveryLocation)
                 .Include(o => o.Pizzas).ThenInclude(p => p.Special)
                 .Include(o => o.Pizzas).ThenInclude(p => p.Toppings).ThenInclude(t => t.Topping)
@@ -77,7 +77,7 @@ namespace BlazingPizza.Server
                 }
             }
 
-            _db.Orders.Attach(order);
+            _db.Orders.Attach(order); // TODO: why use Attach instead of Add???
             await _db.SaveChangesAsync();
 
             // In the background, send push notifications if possible

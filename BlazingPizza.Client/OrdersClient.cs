@@ -16,17 +16,17 @@ namespace BlazingPizza.Client
             this.httpClient = httpClient;
         }
 
-        //GetOrders
+        // Get orders
         public async Task<IEnumerable<OrderWithStatus>> GetOrders() =>
             await httpClient.GetFromJsonAsync<IEnumerable<OrderWithStatus>>("orders");
 
 
-        // getOrder
+        // Get order by orderId
         public async Task<OrderWithStatus> GetOrder(int orderId) =>
             await httpClient.GetFromJsonAsync<OrderWithStatus>($"orders/{orderId}");
 
 
-        //Place order
+        // Place order
         public async Task<int> PlaceOrder(Order order)
         {
             var response = await httpClient.PostAsJsonAsync("orders", order);

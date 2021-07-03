@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace BlazingPizza.Server
 {
-    public class Startup
+    public class Startup // configure the app and set up any app-specific services
     {
         public Startup(IConfiguration configuration)
         {
@@ -23,10 +24,19 @@ namespace BlazingPizza.Server
             services.AddRazorPages();
 
             services.AddDbContext<PizzaStoreContext>(options => 
-                options.UseSqlite("Data Source=pizza.db"));
+                options.UseSqlite("Data Source=pizza.db")); // connectionString to name the database
 
+            // Identity services
             services.AddDefaultIdentity<PizzaStoreUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<PizzaStoreContext>();
+
+            // configure customized identity settings
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredLength = 8;
+            });
 
             services.AddIdentityServer()
                 .AddApiAuthorization<PizzaStoreUser, PizzaStoreContext>();
@@ -63,7 +73,7 @@ namespace BlazingPizza.Server
             {
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
-                endpoints.MapFallbackToFile("index.html");
+                endpoints.MapFallbackToFile("index.html"); // indicates the web-accessible location of the page that starts the Blazor application
             });
         }
     }
