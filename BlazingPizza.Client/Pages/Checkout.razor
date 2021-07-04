@@ -23,9 +23,17 @@
         </div>
 
         <button class="checkout-button btn btn-warning" disabled="@isSubmitting" type="submit">
-            Place order
+            @if (isSubmitting)
+            {
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                <span>Placing order</span>
+            }
+            else
+            {
+                <span>Place order</span>
+            }
+            
         </button>
-
         <DataAnnotationsValidator />
     </EditForm>
 </div>

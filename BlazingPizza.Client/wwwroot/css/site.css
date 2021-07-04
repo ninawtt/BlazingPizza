@@ -497,6 +497,10 @@ form {
     text-transform: uppercase;
 }
 
+.orders-list .btn {
+    white-space: nowrap;
+}
+
 .track-order {
     background-color: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.4);
