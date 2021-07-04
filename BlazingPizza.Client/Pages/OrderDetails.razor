@@ -29,7 +29,11 @@
                     <OrderTrackingBar StatusText="@orderWithStatus.StatusText" />
                     <OrderReview Order="orderWithStatus.Order" />
                 </div>
+                <div class="track-order-map">
+                    <Map Zoom="13" Markers="orderWithStatus.MapMarkers" />
+                </div>
             </div>
+
         </div>
     }
 </div>
