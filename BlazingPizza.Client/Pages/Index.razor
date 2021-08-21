@@ -35,7 +35,9 @@
 
             @foreach (var configuredPizza in Order.Pizzas)
             {
-                <ConfiguredPizzaItem Pizza="configuredPizza" OnRemoved="@(() => RemovePizza(configuredPizza))" />
+                <ConfiguredPizzaItem Pizza="configuredPizza"
+                                     OnRemoved="@(() => RemovePizza(configuredPizza))"
+                                     OnEdit="@(() => EditPizza(configuredPizza))" />
             }
         </div>
     }
@@ -70,5 +72,10 @@
         {
             OrderState.RemoveConfiguredPizza(configuredPizza);
         }
+    }
+
+    public void EditPizza(Pizza configuredPizza)
+    {
+        OrderState.EditConfiguredPizza(configuredPizza);
     }
 }

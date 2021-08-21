@@ -10,6 +10,7 @@ namespace BlazingPizza.Client
         public bool ShowingConfigureDialog { get; private set; }
         public Pizza ConfiguringPizza { get; private set; }
         public Order Order { get; private set; } = new Order();
+        private ConfigurePizzaAction action = ConfigurePizzaAction.Add;
 
         public void ShowConfigurePizzaDialog(PizzaSpecial special)
         {
@@ -32,14 +33,34 @@ namespace BlazingPizza.Client
 
         public void ConfirmConfigurePizzaDialog()
         {
-            Order.Pizzas.Add(ConfiguringPizza);
+            if (action == ConfigurePizzaAction.Add)
+            {
+                Order.Pizzas.Add(ConfiguringPizza);
+            }
+
             ConfiguringPizza = null;
             ShowingConfigureDialog = false;
+            action = ConfigurePizzaAction.Add; // Reset to the default value (Add)
         }
 
         public void RemoveConfiguredPizza(Pizza pizza)
         {
             Order.Pizzas.Remove(pizza);
+        }
+
+        public void EditConfiguredPizza(Pizza pizza)
+        {
+            action = ConfigurePizzaAction.Edit;
+
+            ConfiguringPizza = new Pizza()
+            {
+                Special = pizza.Special,
+                SpecialId = pizza.Id,
+                Size = pizza.Size,
+                Toppings = pizza.Toppings,
+            };
+
+            ShowingConfigureDialog = true;
         }
 
         public void ResetOrder()
@@ -52,5 +73,11 @@ namespace BlazingPizza.Client
             Order = order;
         }
 
+    }
+
+    enum ConfigurePizzaAction
+    {
+        Add,
+        Edit
     }
 }
