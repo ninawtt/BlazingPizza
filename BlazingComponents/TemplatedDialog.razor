@@ -1,0 +1,16 @@
+﻿@if (Show)
+{
+    <div class="dialog-container">
+        <div class="dialog">
+            @ChildContent
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } // same concept of the @Body parameter in a layout
+
+    [Parameter]
+    public bool Show { get; set; }
+}
