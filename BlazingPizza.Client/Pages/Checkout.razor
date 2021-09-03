@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject OrderState OrderState
 @attribute [Authorize]
+@inject IJSRuntime JSRuntime
 
 <div class="main">
     @if (!string.IsNullOrEmpty(errorMessage))
@@ -32,7 +33,7 @@
             {
                 <span>Place order</span>
             }
-            
+
         </button>
         <DataAnnotationsValidator />
     </EditForm>
@@ -62,6 +63,28 @@
         {
             errorMessage = e.Message;
             isSubmitting = false;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        _ = RequestNotificationSubscriptionAsync();
+    }
+
+    async Task RequestNotificationSubscriptionAsync()
+    {
+        var subscription = await JSRuntime.InvokeAsync<NotificationSubscription>("blazorPushNotifications.requestSubscription");
+
+        if (subscription != null)
+        {
+            try
+            {
+                await OrdersClient.SubscribeToNotifications(subscription);
+            }
+            catch (AccessTokenNotAvailableException ex)
+            {
+                ex.Redirect();
+            }
         }
     }
 }
